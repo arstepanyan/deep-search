@@ -22,42 +22,56 @@ def download_youtube_video():
         dwl_vid()
         channel = int(input("Enter 1 if you want to download more videos \nEnter 0 if you are done "))
 
-def videos_to_frames(video_dir_path):
+def videos_to_frames(video_dir_path, frames_dir_path):
     """
     Extract 1 frame per second for every video in the directory
-    param video_dir_path: path to the videos
+    :param video_dir_path: path to the videos
+    :param frames_dir_path: path to the frames directory where the extracted frames will be saved
+    :return:
     """
     start_time = time.time()
     for videofile in os.listdir(video_dir_path):
+        video_name = videofile.split(".")[0]
         if videofile.split(".")[1] != 'mp4':
             continue
-        elif not os.path.exists(os.path.join(video_dir_path, "/frames/{}".format(videofile.split(".")[0]))):
+        elif not os.path.exists(os.path.join(frames_dir_path, video_name)):
             start_time = time.time()
-            os.mkdir(os.path.join(video_dir_path, "/frames/{}".format(videofile.split(".")[0])))
+            os.mkdir(os.path.join(os.path.join(frames_dir_path, video_name)))
             count = 0
             print('Extracting frames from {}'.format(videofile))
-            cap = cv2.VideoCapture(videofile)  # capturing the video from the given path
-            frameRate = cap.get(5)  # frame rate
+            cap = cv2.VideoCapture(os.path.join(video_dir_path, videofile)) # capturing the video from the given path
+            frameRate = cap.get(5)                  # frame rate
             x = 1
             while (cap.isOpened()):
-                frameId = cap.get(1)  # current frame number
+                frameId = cap.get(1)                # current frame number
                 ret, frame = cap.read()
                 if (ret != True):
                     break
                 if (frameId % math.floor(frameRate) == 0):
-                    filename = "../data/train/frames/{}/frame{}.png".format(videofile.split(".")[0], count)
+                    filename = os.path.join(frames_dir_path, video_name, "frame{}.png".format(count))
                     count += 1
                     cv2.imwrite(filename, frame)
             cap.release()
-            print("Finished extracting frames from {}! .......... {} seconds".format(videofile, round(time.time()-start_time, 2)))
-        elif os.listdir(os.path.join(video_dir_path, "/frames/{}".format(videofile.split(".")[0]))) > 0:
-            print("The frames have already been extracted")
+            print("Finished extracting frames from {}! .......... {} seconds\n".format(videofile, round(time.time()-start_time, 2)))
+        elif len(os.listdir(os.path.join(frames_dir_path, video_name))) > 0:
+            print("The frames have already been extracted\n")
+
 
 def plot_image(image_path):
+    """
+    Show the image
+    :param image_path: path to the image to be shown
+    :return:
+    """
     img = plt.imread(image_path)
     plt.imshow(img)
 
 def show_video(video_path):
+    """
+    Play the video
+    :param video_path: path to the video to be played
+    :return:
+    """
     video = io.open(video_path, 'r+b').read()
     encoded = base64.b64encode(video)
     HTML(data='''<video alt="test" controls>
@@ -65,6 +79,13 @@ def show_video(video_path):
                  </video>'''.format(encoded.decode('ascii')))
 
 def frames_to_videos(original_video_path, frame_indices, destination_path):
+    """
+    
+    :param original_video_path:
+    :param frame_indices:
+    :param destination_path:
+    :return:
+    """
     t = time.time()
     count = 0
     for i, item in enumerate(frame_indices):
