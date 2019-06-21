@@ -80,7 +80,7 @@ def show_video(video_path):
 
 def frames_to_videos(original_video_path, frame_indices, destination_path):
     """
-    
+
     :param original_video_path:
     :param frame_indices:
     :param destination_path:
