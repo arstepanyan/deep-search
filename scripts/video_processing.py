@@ -66,21 +66,43 @@ def plot_image(image_path):
     img = plt.imread(image_path)
     plt.imshow(img)
 
-def show_video(video_path):
+def order_frame_indices(results, cosine_threshold=0.7):
     """
-    Play the video
-    :param video_path: path to the video to be played
-    :return:
+    Order the indices of the frames given the search results
+    :param results: Dictionary where keys are videos names and values are lists of lists containing the frame number, frame path, and frame cosine
+    :param cosine_threshold: frames bigger than this threshold will be excluded
+    :return: dictionary where keys are video names and values are lists of lists. Every inner list contains consecutive frame numbers
+    >>> order_frame_indices({"video1":[[1, "frame1_path", 0.1], [11, "frame10_path", 0.1], [10, "frame10_path", 0.6], [12, "frame12_path", 0.9]],
+    ...                      "video2": [[9, "frame9_path", 0.2], [2, "frame2_path", 0.5], [4, "frame4_path", 0.8]]})
+    {'video1': [[1], [10, 11]], 'video2': [[2], [9]]}
     """
-    video = io.open(video_path, 'r+b').read()
-    encoded = base64.b64encode(video)
-    HTML(data='''<video alt="test" controls>
-                    <source src="data:video/mp4;base64,{0}" type="video/mp4" />
-                 </video>'''.format(encoded.decode('ascii')))
+    indices = {}
+    for video in results.keys():
+        results[video].sort(key=lambda x: x[0])
+        current_index = results[video][0][0]
+        indices[video] = []
+        count = 0
+        for i, list_item in enumerate(results[video]):
+            if results[video][i][2] > cosine_threshold:
+                continue
+            elif (len(indices[video]) == 0):
+                indices[video].append([list_item[0]])
+                continue
+            elif list_item[0] != current_index + 1:
+                indices[video].append([list_item[0]])
+                count += 1
+            else:
+                indices[video][count].append(list_item[0])
+            current_index = results[video][i][0]
+    return indices
+
+
+
+
+
 
 def frames_to_videos(original_video_path, frame_indices, destination_path):
     """
-
     :param original_video_path:
     :param frame_indices:
     :param destination_path:
@@ -100,28 +122,23 @@ def frames_to_videos(original_video_path, frame_indices, destination_path):
                 continue
     print("Finished constructing video clips ......... {} seconds".format(time.time() - t))
 
-def order_frame_indices(results_indices):
-    results_indices.sort(key=lambda x: x[0])
-    current_index = results_indices[0][0]
-    indices = []
-    count = 0
-    for i, list_item in enumerate(results_indices):
-        if (len(indices) == 0):
-            indices.append([list_item[0]])
-            continue
-        elif list_item[0] != current_index + 1:
-            indices.append([list_item[0]])
-            count += 1
-        else:
-            indices[count].append(list_item[0])
-        current_index = results_indices[i][0]
-    return indices
+def show_video(video_path):
+    """
+    Play the video
+    :param video_path: path to the video to be played
+    :return:
+    """
+    video = io.open(video_path, 'r+b').read()
+    encoded = base64.b64encode(video)
+    HTML(data='''<video alt="test" controls>
+                    <source src="data:video/mp4;base64,{0}" type="video/mp4" />
+                 </video>'''.format(encoded.decode('ascii')))
 
-def plot_frames(n_frames, frames_path, indices):
-    fig = plt.figure(figsize=(40, 40))
-    for i in range(1, n_frames + 1):
-        img = plt.imread(os.path.join(frames_path, '/frame{}.png'.format(indices[i - 1][0]))
-        fig.add_subplot(n_frames/3, 3, i)
-        plt.imshow(img)
-        plt.axis('off')
-    plt.show()
+#def plot_frames(n_frames, frames_path, indices):
+#    fig = plt.figure(figsize=(40, 40))
+#    for i in range(1, n_frames + 1):
+#        img = plt.imread(os.path.join(frames_path, '/frame{}.png'.format(indices[i - 1][0]))
+#        fig.add_subplot(n_frames/3, 3, i)
+#        plt.imshow(img)
+#        plt.axis('off')
+#    plt.show()
