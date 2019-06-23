@@ -78,15 +78,22 @@ def plot_similar_frames(frames_dir_path, video_name, results, n_frames=12):
                      Typically corresponds to the number of frames that we want to search for
     :return:
     """
-    fig = plt.figure(figsize=(n_frames*6, n_frames*3))
-    for i in range(1, n_frames+1):
-        img = plt.imread(os.path.join(frames_dir_path, video_name, 'frame{}.png'.format(results[video_name][i-1][0])))
-        fig.add_subplot(n_frames/3, 3, i)
-        plt.imshow(img)
-        plt.title("Cosine similarity: {}".format(round(float(results[video_name][i-1][2]), 4)), size=20+n_frames*3)
-        plt.axis('off')
-        plt.tight_layout()
-    plt.show()
+
+    def plot_similar_frames(frames_dir_path, video_name, results, n_frames=12):
+        if n_frames % 3 != 0:
+            print("Warning: n_frames should be a multiple of 3")
+        else:
+            fig = plt.figure(figsize=(n_frames * 6, n_frames * 3))
+            for i in range(1, n_frames + 1):
+                img = plt.imread(
+                    os.path.join(frames_dir_path, video_name, 'frame{}.png'.format(results[video_name][i - 1][0])))
+                fig.add_subplot(n_frames / 3, 3, i)
+                plt.imshow(img)
+                plt.title("Cosine similarity: {}".format(round(float(results[video_name][i - 1][2]), 4)),
+                          size=20 + n_frames * 3)
+                plt.axis('off')
+                plt.tight_layout()
+            plt.show()
 
 
 def order_frame_indices(results, cosine_threshold=0.7):
