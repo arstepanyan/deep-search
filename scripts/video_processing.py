@@ -61,16 +61,40 @@ def plot_image(image_path):
     """
     Show the image
     :param image_path: path to the image to be shown
-    :return:
+    :return: plot
     """
     img = plt.imread(image_path)
     plt.imshow(img)
 
+
+def plot_similar_frames(frames_dir_path, video_name, results, n_frames=12):
+    """
+    Plot frames (images)
+    :param frames_dir_path: path (string) to the directory of the frames
+    :param video_name: name (string) of the video the frames of which are going to be plotted
+    :param results: Dictionary where keys are names of the videos (string) and
+                    values are lists of lists containing the frame number (int), frame path (string), and frame cosine (float)
+    :param n_frames: number of frames (int) to be shown. NOTE: this is a multiple of 3. Tested well for n_frames=3, 6, 9, and 12
+                     Typically corresponds to the number of frames that we want to search for
+    :return:
+    """
+    fig = plt.figure(figsize=(n_frames*6, n_frames*3))
+    for i in range(1, n_frames+1):
+        img = plt.imread(os.path.join(frames_dir_path, video_name, 'frame{}.png'.format(results[video_name][i-1][0])))
+        fig.add_subplot(n_frames/3, 3, i)
+        plt.imshow(img)
+        plt.title("Cosine similarity: {}".format(round(float(results[video_name][i-1][2]), 4)), size=20+n_frames*3)
+        plt.axis('off')
+        plt.tight_layout()
+    plt.show()
+
+
 def order_frame_indices(results, cosine_threshold=0.7):
     """
     Order the indices of the frames given the search results
-    :param results: Dictionary where keys are videos names and values are lists of lists containing the frame number, frame path, and frame cosine
-    :param cosine_threshold: frames bigger than this threshold will be excluded
+    :param results: Dictionary where keys are names of the videos (string) and
+                    values are lists of lists containing the frame number (int), frame path (string), and frame cosine (float)
+    :param cosine_threshold: Frames whose cosine with is bigger than this threshold will be excluded
     :return: dictionary where keys are video names and values are lists of lists. Every inner list contains consecutive frame numbers
     >>> order_frame_indices({"video1":[[1, "frame1_path", 0.1], [11, "frame10_path", 0.1], [10, "frame10_path", 0.6], [12, "frame12_path", 0.9]],
     ...                      "video2": [[9, "frame9_path", 0.2], [2, "frame2_path", 0.5], [4, "frame4_path", 0.8]]})
