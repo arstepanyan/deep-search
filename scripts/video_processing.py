@@ -152,16 +152,23 @@ def frames_to_videos(original_video_path, frame_indices, destination_path):
     print("Finished constructing video clips ......... {} seconds".format(time.time() - t))
 
 
-def show_video(video_path):
+def cv2_video_analysis(video_path):
     """
-    Play the video
-    :param video_path: path to the video to be played
-    :return:
+    print several features of the given video
+    :param video_path: path to the video
+    :return: print frames per second, number of total frames, duration of the video in seconds and minutes:seconds
     """
-    video = io.open(video_path, 'r+b').read()
-    encoded = base64.b64encode(video)
-    HTML(data='''<video alt="test" controls>
-                    <source src="data:video/mp4;base64,{0}" type="video/mp4" />
-                 </video>'''.format(encoded.decode('ascii')))
+    cap = cv2.VideoCapture(video_path)
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    duration = frame_count / fps
+    minutes = int(duration / 60)
+    seconds = duration % 60
 
-    
+    print('fps = ' + str(fps))
+    print("cap.get(5) ...", cap.get(5))
+    print('number of total frames = ' + str(frame_count))
+    print('duration (seconds) = ' + str(duration))
+    print('duration (minutes:seconds) = ' + str(minutes) + ':' + str(seconds))
+
+    cap.release()
