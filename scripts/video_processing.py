@@ -164,12 +164,4 @@ def show_video(video_path):
                     <source src="data:video/mp4;base64,{0}" type="video/mp4" />
                  </video>'''.format(encoded.decode('ascii')))
 
-
-#def plot_frames(n_frames, frames_path, indices):
-#    fig = plt.figure(figsize=(40, 40))
-#    for i in range(1, n_frames + 1):
-#        img = plt.imread(os.path.join(frames_path, '/frame{}.png'.format(indices[i - 1][0]))
-#        fig.add_subplot(n_frames/3, 3, i)
-#        plt.imshow(img)
-#        plt.axis('off')
-#    plt.show()
+    
