@@ -130,26 +130,34 @@ def order_frame_indices(results, cosine_threshold=0.7):
     return indices
 
 
-def frames_to_videos(original_video_path, frame_indices, destination_path):
+def frames_to_videos_2(original_videos_path, frame_indices_dict, results_clips_path):
     """
     :param original_video_path:
     :param frame_indices:
     :param destination_path:
     :return:
     """
-    t = time.time()
-    count = 0
-    for i, item in enumerate(frame_indices):
-        if not os.path.exists(destination_path):
-            os.mkdir(os.path.join(destination_path, "/subvideo_{}.mp4".format(count)))
-            start_time = item[0]
-            end_time = item[-1]
-            if end_time - start_time > 1:
-                ffmpeg_extract_subclip(video_path, start_time, end_time, targetname=target_name)
-                count += 1
-            else:
-                continue
-    print("Finished constructing video clips ......... {} seconds".format(time.time() - t))
+    for video in frame_indices_dict.keys():
+        if frame_indices_dict[video] == []:
+            continue
+        else:
+            count = 0
+            if not os.path.exists(os.path.join(results_clips_path, video)):
+                os.mkdir(os.path.join(results_clips_path, video))
+                for i, item in enumerate(frame_indices_dict[video]):
+                    target_path = os.path.join(results_clips_path, video, "subvideo_{}.mp4".format(count))
+                    #os.mkdir(target_path)
+                    start_time = item[0]
+                    end_time = item[-1]
+                    if end_time - start_time > 1:
+                        print("\n\n", start_time, end_time)
+                        ffmpeg_extract_subclip(os.path.join(original_videos_path, "{}.mp4".format(video)), start_time-1, end_time+1, targetname=target_path)
+                        count += 1
+                    else:
+                        print(start_time, end_time, 'continue')
+                        continue
+            elif os.path.exists(os.path.join(results_clips_path, video)) and len(os.listdir(os.path.join(results_clips_path, video))) > 0:
+                print("{} directory exists and is not empty".format(os.path.join(results_clips_path, video)))
 
 
 def cv2_video_analysis(video_path):
