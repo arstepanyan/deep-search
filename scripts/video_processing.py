@@ -130,7 +130,7 @@ def order_frame_indices(results, cosine_threshold=0.7):
     return indices
 
 
-def frames_to_videos_2(original_videos_path, frame_indices_dict, results_clips_path):
+def frames_to_videos(original_videos_path, frame_indices_dict, results_clips_path):
     """
     :param original_video_path:
     :param frame_indices:
