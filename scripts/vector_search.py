@@ -30,11 +30,9 @@ def load_headless_pretrained_model():
     """
     #print ("Loading headless pretrained model...")
     pretrained_mobilenet = MobileNet(weights='imagenet', include_top=True)
-    #print(pretrained_mobilenet.summary())
     model = Model(inputs=pretrained_mobilenet.input,
                   #outputs=pretrained_mobilenet.get_layer('fc2').output)
                   outputs=pretrained_mobilenet.get_layer('reshape_2').output)
-    print(model.summary())
     return model
 
 
