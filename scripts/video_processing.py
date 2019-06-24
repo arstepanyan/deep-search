@@ -3,26 +3,21 @@ import math
 import os
 import time
 import matplotlib.pyplot as plt
-import youtube_dl
-import io
-import base64
-from IPython.display import HTML
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
+from pytube import YouTube
 
 
-def dwl_vid():
-    ydl_opts = {}
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([zxt])
-
-
-def download_youtube_video():
-    channel = 1
-    while (channel == int(1)):
-        link_of_the_video = input("Copy & paste the URL of the YouTube video you want to download:- ")
-        zxt = link_of_the_video.strip()
-        dwl_vid()
-        channel = int(input("Enter 1 if you want to download more videos \nEnter 0 if you are done "))
+def download_youtube_video(youtube_link, path_to_dir):
+    """
+    Download a youtube video from the given link to the given directory
+    :param youtube_link: link to the video to be downloaded
+    :param path_to_dir: path to the directory where to save the video
+    :return: 
+    """
+    yt = YouTube(youtube_link)
+    yt = yt.get('mp4', '360p')
+    yt.download(path_to_dir)
+    print("Done downloading {}".format(youtube_link))
 
 
 def videos_to_frames(video_dir_path, frames_dir_path):
