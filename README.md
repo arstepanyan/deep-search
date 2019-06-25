@@ -4,7 +4,7 @@ Search engine that finds segments of videos based on the input image or text.
 
 To check-out the repo:
 
-    git clone git@github.com:arstepanyan/pythia.git
+    git clone git@github.com:arstepanyan/deep-search.git
     
 ## How it works
 
