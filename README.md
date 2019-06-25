@@ -25,7 +25,7 @@ To reproduce the results
        |
        |___frames/
        |
-       |___photots/
+       |___photos/
        |     |_______hills_river.jpg
        |
        |
