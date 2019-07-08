@@ -1,89 +1,39 @@
-# Pythia
+# Deep Search
 
-Search engine that finds the searched object in videos and returns the truncated part/s of the videos containing that object.
+Search engine that finds segments of videos based on the input image or text.
 
+To check-out the repo:
 
-## TODOs
+    git clone git@github.com:arstepanyan/deep-search.git
+    
+## How it works
 
-## Requisites
+Let's say you have a library of videos and you want to search for specific parts of the videos. Deep search takes your library of videos and indexes them. Indexing will take some time. But after it is created and stored in the dist, searching is pretty fast. You can give an image and ask to search for the parts of videos similar to that image. Or you can simply search by text. 
 
-- List all packages and software needed to build the environment
-- This could include cloud command line tools (i.e. gsutil), package managers (i.e. conda), etc.
+## Run The Notebook
 
-#### Dependencies
-
-- [Streamlit](streamlit.io)
-
-#### Installation
-To install the package above, pleae run:
-```shell
-pip install -r requiremnts
-```
-
-## Build Environment
-- Include instructions of how to launch scripts in the build subfolder
-- Build scripts can include shell scripts or python setup.py files
-- The purpose of these scripts is to build a standalone environment, for running the code in this repository
-- The environment can be for local use, or for use in a cloud environment
-- If using for a cloud environment, commands could include CLI tools from a cloud provider (i.e. gsutil from Google Cloud Platform)
-```
-# Example
-
-# Step 1
-# Step 2
-```
-
-## Configs
-- We recommond using either .yaml or .txt for your config files, not .json
-- **DO NOT STORE CREDENTIALS IN THE CONFIG DIRECTORY!!**
-- If credentials are needed, use environment variables or HashiCorp's [Vault](https://www.vaultproject.io/)
-
-
-## Test
-- Include instructions for how to run all tests after the software is installed
-```
-# Example
-
-# Step 1
-# Step 2
-```
-
-## Run Inference
-- Include instructions on how to run inference
-- i.e. image classification on a single image for a CNN deep learning project
-```
-# Example
-
-# Step 1
-# Step 2
-```
-
-## Build Model
-- Include instructions of how to build the model
-- This can be done either locally or on the cloud
-```
-# Example
-
-# Step 1
-# Step 2
-```
-
-## Serve Model
-- Include instructions of how to set up a REST or RPC endpoint
-- This is for running remote inference via a custom model
-```
-# Example
-
-# Step 1
-# Step 2
-```
-
-## Analysis
-- Include some form of EDA (exploratory data analysis)
-- And/or include benchmarking of the model and results
-```
-# Example
-
-# Step 1
-# Step 2
-```
+To reproduce the results
+1. Download the following videos from Youtube and store them in the directory *videos* (see the structure of the directories below)
+    * Cactáceas, especies en peligro de extinción en SLP: https://www.youtube.com/watch?v=G1uoMICnZAk
+    * Greek Layered Dip Recipe: https://www.youtube.com/watch?v=BRssfhRDLxo
+    * Swiftcurrent Pass and Lookout - August 2012: https://www.youtube.com/watch?v=VUaQWSvn7Ik
+2. Have a directory called *data* (with the structure shown below) in the same path as the *notebook* directory where the *image_video_search.ipynb* resides
+       
+       data/
+       |
+       |___features_mappings/
+       |
+       |___frames/
+       |
+       |___photos/
+       |     |_______hills_river.jpg
+       |
+       |
+       |___results_clips
+       |
+       |___videos/
+             |_______Cactaceas_especies_en_peligro_de_extincion_en_SLP.mp4
+             |_______Greek_Layered_Dip_Recipe.mp4
+             |_______Swiftcurrent_Pass_and_Lookout_August_2012.mp4
+             
+3. Run the *notebook notebooks/image_video_search.ipynb*
