@@ -2,10 +2,6 @@
 
 Search engine that finds segments of videos based on the input text.
 
-To check-out the repo:
-
-    git clone git@github.com:arstepanyan/deep-search.git
-    
 ## How it works
 
 Let's say you have a library of videos and you want to search for specific parts of the videos. Deep search takes your library of videos and indexes them. Indexing will take some time. But after it is created and stored in the disc, searching is pretty fast. You can simply search by text. 
