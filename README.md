@@ -52,5 +52,5 @@ python deep-search.py index --catalog_path path-to-catalog
 ```
 To search in your catalog
 ```
-python deep-search.py search --catalog_path path-to-catalog --results_path path-to-results --text text1 text2 textN
+python deep-search.py search --catalog_path path-to-catalog --text text1 text2 textN
 ```

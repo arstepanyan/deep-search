@@ -6,7 +6,7 @@ import nmslib
 import time
 import cv2
 import numpy as np
-import fasttext as ft
+import fastText as ft
 import urllib.request
 import zipfile
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
@@ -93,9 +93,6 @@ class Catalog:
         self.images_pkl = pickle.load(open(os.path.join(self.model_path, 'images.pkl'), 'rb'))
         self.image_vec_pkl = pickle.load(open(os.path.join(self.model_path, 'img_vecs.pkl'), 'rb'))
 
-        print(len(self.images_pkl))
-        print(len(self.image_vec_pkl))
-
         self.fake_path = os.path.join(self.catalog_path, 'tmp')
 
         if not os.path.isdir(self.word_vec_path):
@@ -131,28 +128,38 @@ class Catalog:
         """Search text in the catalog."""
 
         print('\tSearching ...')
-        start_time = time.time()
+        # Delete the last search results and create a new results directory
+        if os.path.exists(self.results_path):
+            shutil.rmtree(self.results_path)
+        os.mkdir(self.results_path)
+            
         index = self.__load_index()
 
         # Grab the word vector of the input text
         en_vecd = ft.load_model(os.path.join(self.word_vec_path, 'wiki.en.bin'))
-        word_vec = en_vecd.get_word_vector(text)
-        idxs, dists = self.__get_knn(index['photos'][1], word_vec)
-
-        # Search for images
-        for i, cos in zip(idxs, dists):
-            filename = os.path.join(self.results_path, "{}.png".format(round(cos, 2)))
-            cv2.imwrite(filename, index['photos'][0][i])
-
+        word_vecs = []
+        for word in text:
+            word_vecs.append(en_vecd.get_word_vector(word))
+        word_vec = np.mean(word_vecs, axis=0)
+        
+        start_time = time.time()
+#        # Search for images
+#         idxs, dists = self.__get_knn(index['photos'][1], word_vec)
+#         for i, cos in zip(idxs, dists):
+#             #filename = os.path.join(self.results_path, "{}.png".format(round(cos, 2)))
+#             filename = os.path.join(self.results_path, "{}".format(index['photos'][0][i]))
+#             print(filename)
+#             print(index['photos'][0][i])
+#             cv2.imwrite(filename, index['photos'][0][i])
+                
         # Search for videos
         results_vecs = {}
         for key in index.keys():
             if key == 'photos':
                 continue
             results_vecs[key] = self.__get_knn(index[key], word_vec)
-
-        frames_ordered = video_processing.order_frame_indices(results_vecs, cosine_threshold=0.7)
-        video_processing.frames_to_videos(self.catalog_path, frames_ordered, self.results_path)
+        frames_ordered = order_frame_indices(results_vecs, cosine_threshold=0.7)
+        frames_to_videos(self.catalog_path, frames_ordered, self.results_path)
 
         print("\tDone searching! ... {} seconds".format(time.time() - start_time))
 
@@ -214,7 +221,7 @@ class Catalog:
         self.learn.load(os.path.join(self.model_path, 'pre0'))
 
     def __create_index(self, video_features):
-        index = nmslib.init(method='hnsw', space='angulardist')
+        index = nmslib.init(space='angulardist')
         index.addDataPointBatch(video_features)
         index.createIndex()
         return index
@@ -273,11 +280,11 @@ class Catalog:
         print('\tSaving the index ...')
         for key in index.keys():
             if key == 'photos':
-                index[key][1].saveIndex(os.path.join(self.index_path, '{}.nmslib'.format(key)))
+                index[key][1].saveIndex(os.path.join(self.index_path, '{}.nmslib'.format(key)), save_data=True)
                 pickle.dump(index[key][0], open(os.path.join(self.index_path, '{}.pkl'.format(key)), 'wb'))
-                print('Load')
-                cur_index = nmslib.init(space='angulardist')
-                cur_index.loadIndex(os.path.join(self.index_path, 'photos.nmslib'), print_progress=True)
+                #print('Load')
+                #cur_index = nmslib.init(space='angulardist')
+                #cur_index.loadIndex(os.path.join(self.index_path, 'photos.nmslib'), load_data=True)
             else:
                 index[key].saveIndex(os.path.join(self.index_path, '{}.nmslib'.format(key)), save_data=True)
         print('\tDone creating and saving the index ... {} seconds'.format(time.time() - start_time))

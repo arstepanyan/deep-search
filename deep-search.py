@@ -27,7 +27,7 @@ def main():
                                            'python %(prog)s index --catalog_path path-to-catalog\n'
                                            '* Search in the catalog:  '
                                            'python %(prog)s search --catalog_path path-to-catalog '
-                                           '--results_path path-to-results --text text1 text2 textN\n',
+                                           '--text text1 text2 textN\n',
                                      description='Search text or image in your catalog.')
 
     parser.add_argument('mode', help='Need to provide an action: search or index.', choices=['search', 'index'])
@@ -39,13 +39,9 @@ def main():
     if args.mode == 'index':
         catalog.index()
     else:
-        parser.add_argument('--results_path', help='Path to the catalog directory.', type=dir_path, required=True)
         parser.add_argument('--text', nargs='+', required=True)
         args = vars(parser.parse_args())
         catalog.search_text(args['text'])
-
-        print(args['text'])
-
 
 if __name__ == "__main__":
     main()
