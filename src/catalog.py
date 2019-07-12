@@ -90,6 +90,18 @@ class Catalog:
         self.results_path = os.path.join(self.catalog_path, 'results')
         self.index_path = os.path.join(self.catalog_path, 'indexes')
 
+        if os.path.exists(self.model_path, 'images.pkl.zip'):
+            zipfile_path = os.path.join(self.model_path, 'images.pkl.zip')
+            zip_ref = zipfile.ZipFile(zipfile_path, 'r')
+            zip_ref.extractall(self.model_path)
+            zip_ref.close()
+            os.remove(zipfile_path)
+        if os.path.exists(self.model_path, 'img_vecs.pkl.zip'):
+            zipfile_path = os.path.join(self.model_path, 'img_vecs.pkl.zip')
+            zip_ref = zipfile.ZipFile(zipfile_path, 'r')
+            zip_ref.extractall(self.model_path)
+            zip_ref.close()
+            os.remove(zipfile_path)    
         self.images_pkl = pickle.load(open(os.path.join(self.model_path, 'images.pkl'), 'rb'))
         self.image_vec_pkl = pickle.load(open(os.path.join(self.model_path, 'img_vecs.pkl'), 'rb'))
 
