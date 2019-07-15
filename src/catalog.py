@@ -6,7 +6,7 @@ import nmslib
 import time
 import cv2
 import numpy as np
-import fastText as ft
+import fasttext as ft
 import urllib.request
 import zipfile
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
@@ -90,18 +90,25 @@ class Catalog:
         self.results_path = os.path.join(self.catalog_path, 'results')
         self.index_path = os.path.join(self.catalog_path, 'indexes')
 
-        if os.path.exists(self.model_path, 'images.pkl.zip'):
-            zipfile_path = os.path.join(self.model_path, 'images.pkl.zip')
+        zipfile_path = os.path.join(self.model_path, 'images.pkl.zip')
+        if os.path.exists(zipfile_path):
             zip_ref = zipfile.ZipFile(zipfile_path, 'r')
             zip_ref.extractall(self.model_path)
             zip_ref.close()
             os.remove(zipfile_path)
-        if os.path.exists(self.model_path, 'img_vecs.pkl.zip'):
-            zipfile_path = os.path.join(self.model_path, 'img_vecs.pkl.zip')
+        zipfile_path = os.path.join(self.model_path, 'img_vecs.pkl.zip')
+        if os.path.exists(zipfile_path):
             zip_ref = zipfile.ZipFile(zipfile_path, 'r')
             zip_ref.extractall(self.model_path)
             zip_ref.close()
-            os.remove(zipfile_path)    
+            os.remove(zipfile_path)
+        zipfile_path = os.path.join(self.model_path, 'pre0.h5.zip')
+        if os.path.exists(zipfile_path):
+            zip_ref = zipfile.ZipFile(zipfile_path, 'r')
+            zip_ref.extractall(self.model_path)
+            zip_ref.close()
+            os.remove(zipfile_path)
+
         self.images_pkl = pickle.load(open(os.path.join(self.model_path, 'images.pkl'), 'rb'))
         self.image_vec_pkl = pickle.load(open(os.path.join(self.model_path, 'img_vecs.pkl'), 'rb'))
 
