@@ -1,6 +1,6 @@
 # Deep Search
 
-Search engine that finds segments of videos based on the input text.
+Search service that finds segments of videos based on the input text.
 
 ## How it works
 
