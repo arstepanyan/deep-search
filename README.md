@@ -1,7 +1,7 @@
 # Deep Search
 
 Search service that finds segments of videos based on the input text.  
-Find the slides (here)[https://docs.google.com/presentation/d/1mXRmkJVpf9BaJRtZuW6j_oCRmyeuaGmacOMGCABE7CE/mobilepresent?slide=id.g5c36562f78_0_0]
+Find the slides [here](https://docs.google.com/presentation/d/1mXRmkJVpf9BaJRtZuW6j_oCRmyeuaGmacOMGCABE7CE/mobilepresent?slide=id.g5c36562f78_0_0)
 
 ## How it works
 
