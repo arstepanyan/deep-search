@@ -11,6 +11,8 @@ Let's say you have a library of videos and you want to search for specific parts
 
 ### Where does deep learning come into play?  
 
+Inspired by the paper ["DeViSE: A Deep Visual-Semantic Embedding Model", Andrea Frome et al.](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/41473.pdf) 
+
 I tackle this problem by training a Deep Neural Network with ResNet50 as a backbone and 300 elements long dense layer instead of the last softmax layer of ResNet50. Why 300 element long Dense layer? Because given an input image, I want to extract features/embeddings from it that are as close to the 300 element word vector of the corresponding label as possible. I use around 1.5M Imagenet images of 1000 classes. The learning itself is done by challenging the model to minimize the cosine similarity loss between
 
 1. The 300 elements dense layer (instead of the last softmax layer)
